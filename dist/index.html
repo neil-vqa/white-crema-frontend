@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name=”robots” content="index, follow">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>White Crema - Ice Cream Rediscovered</title>
+	<meta name="description" content="">
+	
+	<link rel="icon" type="image/x-icon" href="">
+	<link rel="stylesheet" href="style.css">
+	
+	
+</head>
+<body class="font-body">
+	
+	<div>
+		<div>
+			<img class="h-64 w-full object-cover" src="header.jpg"/>
+		</div>
+	</div>
+
+	<div class="grid md:grid-cols-4">
+		<!-- nav -->
+		<div class="md:col-span-1 flex justify-center md:justify-end bg-blue-400">
+			<nav class="md:mt-10">
+				<div>
+					<ul class="flex md:block">
+						<li>
+							<a href="" class="md:mr-5 my-2 mr-2 flex items-center justify-end">
+								<span class="text-xl md:text-3xl mr-1 md:mr-5 text-white hover:text-gray-700 transition ease-in-out duration-500">Home</span>
+								<svg viewBox="0 0 20 20" fill="currentColor" class="home hidden text-white md:block w-6 h-6 sm:w-8 sm:h-8">
+									<path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z">
+									</path>
+								</svg>
+							</a>
+						</li>
+						<li>
+							<a href="" class="md:mr-5 my-2 mx-4 flex items-center justify-end">
+								<span class="text-xl md:text-3xl mr-1 md:mr-5 text-white hover:text-gray-700 transition ease-in-out duration-500">About</span>
+								<svg viewBox="0 0 20 20" fill="currentColor" class="information-circle hidden text-white md:block w-6 h-6 sm:w-8 sm:h-8">
+									<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd">
+									</path>
+								</svg>
+							</a>
+						</li>
+						<li>
+							<a href="" class="md:mr-5 my-2 ml-2 flex items-center justify-end">
+								<span class="text-xl md:text-3xl mr-1 md:mr-5 text-white hover:text-gray-700 transition ease-in-out duration-500">Contact</span>
+								<svg viewBox="0 0 20 20" fill="currentColor" class="mail hidden text-white md:block w-6 h-6 sm:w-8 sm:h-8"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+									<path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z">
+									</path>
+								</svg>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+		<!-- products -->
+		<div class="md:col-span-3 p-10">
+			<h1 class="font-head text-3xl sm:text-6xl">White Crema</h1>
+			<h1 class="font-head text-xl sm:text-2xl">Ice cream rediscovered</h1>
+			<div id="vapp"></div>
+		</div>
+	</div>
+
+	
+	<script src="https://unpkg.com/vue@2.6.11/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js" type="text/javascript"></script>
+	
+<script type="text/javascript">
+
+Vue.component('ProductList',{
+	delimiters: ["[[","]]"],
+	data() {
+		return {
+			products: [],
+			//loader: true,
+			added: [],
+			cart: [],
+		}
+	},
+	methods: {
+		all() {
+			axios.get('https://white-crema.herokuapp.com/products/?available=true')
+				.then( response => {
+					this.products = response.data;
+					//this.loader = false;	
+				});
+		},
+		addItem(product) {
+			this.added.push(product.id);
+			this.cart.push(product);
+			this.$emit('update-cart', this.cart);
+			this.$emit('update-list', this.added);
+		},
+		removeItem(product) {
+			this.added.splice(this.added.indexOf(product.id), 1);
+			this.cart.splice(this.cart.findIndex(property => property.id === product.id), 1);
+			this.$emit('update-cart', this.cart);
+			this.$emit('update-list', this.added);
+		},
+	},
+	created: function() {
+		this.all();
+	},
+	template: `
+		<div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
+			<div v-for="product in products" :key="product.id">
+				<div class="card">
+					<img :src="product.picture[0].url" class="w-full h-40 sm:h-56 object-cover"/>
+					<div class="m-5 h-auto lg:h-64 flex flex-col justify-between">
+						<span class="text-xl font-bold">[[ product.name ]]</span>
+						<span class="mt-3 tracking-wide">[[ product.description ]]</span>
+						<span class="text-xl">₱ [[ product.price ]]</span>
+						<div class="flex justify-between items-baseline">
+							<button type="button" class="cart-add hover:bg-teal-400 hover:text-white focus:outline-none"
+							 @click="addItem({'id':product.id, 'name':product.name, 'price':product.price})">
+								Add
+							</button>
+							<button type="button" class="cart-remove hover:bg-red-400 hover:text-white focus:outline-none"
+							v-if="added.includes(product.id)" @click="removeItem({'id':product.id, 'name':product.name, 'price':product.price})">
+								Remove
+							</button>
+						</div>						
+					</div>
+				</div>
+			</div>
+		</div>
+	`
+})
+
+
+var app = new Vue({
+	delimiters: ["[[","]]"],
+	el: '#vapp',
+	data() {
+		return {
+			modal: false,
+			disabler: false,
+			orders: [],
+			list: [],
+			displays: [],
+			name: '',
+			contact: '',
+			address: '',
+		}
+	},
+	methods: {
+		showModal() {
+			if (this.modal == false) {
+				this.modal = true;
+			} else {
+				this.modal = false;
+			}
+			
+		},
+		updateCart(products) {
+			this.orders = products;
+			this.updateDisplay(this.orders, 'name');
+		},
+		updateList(list) {
+			this.list = list;
+		},
+		updateDisplay(arr, key) {
+			this.displays = [...new Map(arr.map(item => [item[key], item])).values()];
+		}
+	},
+	computed: {
+		count(list, val) {
+			let count = (list, val) => this.list.reduce((a, v) => (v === val ? a + 1 : a), 0);
+			return count
+		},
+		totalPrice() {
+			let prices = this.orders.map(x => x.price);
+			total = prices.reduce((a, b) => a + b, 0);
+			return total
+		}
+	},
+	template: `
+		<div class="relative">
+			<div class="flex justify-between">
+				<h1 class="text-2xl mt-10">Available Now!</h1>
+				<button type="button" class="cart-btn hover:bg-blue-500 focus:outline-none transition ease-in-out duration-500 fixed right-0 bottom-0 mr-2 mb-2 sm:mr-5 sm:mb-5" @click="showModal">
+					<svg viewBox="0 0 20 20" fill="currentColor" v-show="!modal" class="shopping-cart w-10 h-10 text-white"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
+					<svg viewBox="0 0 20 20" fill="currentColor" v-show="modal" class="x w-12 h-12 text-white"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+				</button>
+			</div>
+			
+			<div class="fixed right-0 bottom-0 mb-16 mr-16 sm:mb-20 sm:mr-20 w-3/4 lg:w-1/4 h-auto z-50 bg-transparent flex justify-end" v-show="modal">
+				<div class="w-full h-full bg-blue-200 shadow-xl rounded p-5 lg:p-10">
+					<div class="h-32 sm:h-64 overflow-auto">
+						<h1 class="text-xl mb-5">Orders</h1>
+						<ul>
+							<li v-for="display in displays" class="text-sm md:text-lg">[[ count(list, display.id) ]] x [[ display.name ]] </li>
+						</ul>
+					</div>
+					<h1 class="text-xl mt-5">Total: ₱ [[ totalPrice ]]</h1>
+					<div class="my-5">
+						<form @submit.prevent>
+							<h1 class="text-xl mb-3">Customer Details</h1>
+							<input v-model="name" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Full Name" required>
+							<input v-model="contact" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact" type="number" placeholder="Contact Number" required>
+							<input v-model="address" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="address" type="text" placeholder="Delivery Address" required>
+							<div class="flex items-center mt-3">
+								<button type="submit" :disabled="disabler" class="px-4 py-2 bg-blue-700 text-white hover:bg-blue-900 rounded-md focus:outline-none">Place order</button>
+								<h1 class="text-xl ml-2">Please wait...</h1>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div class="mt-10">
+				<ProductList @update-cart="updateCart" @update-list="updateList"></ProductList>
+			</div>
+		</div>
+	`
+	
+})
+
+
+
+
+
+</script>
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
