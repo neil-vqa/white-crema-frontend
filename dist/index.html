@@ -270,7 +270,7 @@ var app = new Vue({
 			this.checkout = ordered;
 		},
 		sendmail() {
-			axios.post('https://sendmail-hooks.herokuapp.com/wtc/', {
+			axios.post('https://sendmail-hooks.herokuapp.com/mailer/wtc-1/', {
 				"description": "new submission"
 			});
 		},
