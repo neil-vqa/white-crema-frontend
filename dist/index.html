@@ -286,14 +286,14 @@ var app = new Vue({
 				});
 			});
 		
-			let inCart = JSON.stringify(toCart, null, '\t');
+			//let inCart = JSON.stringify(toCart, null, '\t');
 		
 			axios.post('https://sendmail-hooks.herokuapp.com/mailer/wtc-1/', {
 				"name": this.name,
 				"contact": this.contact,
 				"address": this.address,
 				"total": this.total,
-				"cart": inCart,
+				"cart": toCart,
 			});
 		},
 	},
