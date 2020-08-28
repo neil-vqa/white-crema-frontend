@@ -269,7 +269,13 @@ var app = new Vue({
 			
 			this.checkout = ordered;
 		},
-		sendmail() {
+		sendmail() {			
+			//axios.post('https://formspree.io/mbjzzwjy', {
+			//	"name": this.name,
+			//	"contact": this.contact,
+			//	"address": this.address,
+			//});
+		
 			idList = this.list;
 			let toCart = [];
 
@@ -325,9 +331,9 @@ var app = new Vue({
 					<div class="my-5">
 						<form @submit.prevent="sendOrder">
 							<h1 class="text-xl mb-3">Customer Details</h1>
-							<input v-model="name" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Full Name" required>
-							<input v-model="contact" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact" type="number" placeholder="Contact Number" required>
-							<input v-model="address" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="address" type="text" placeholder="Delivery Address" required>
+							<input v-model="name" name="Name" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Full Name" required>
+							<input v-model="contact" name="Contact" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact" type="number" placeholder="Contact Number" required>
+							<input v-model="address" name="Address" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="address" type="text" placeholder="Delivery Address" required>
 							<div class="flex items-center mt-3">
 								<button type="submit" :disabled="disabler" class="px-4 py-2 bg-blue-700 text-white hover:bg-blue-900 rounded-md focus:outline-none">Place order</button>
 								<h1 class="text-xl ml-2" v-if="sending">Please wait...</h1>
