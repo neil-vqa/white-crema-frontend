@@ -269,13 +269,7 @@ var app = new Vue({
 			
 			this.checkout = ordered;
 		},
-		sendmail() {			
-			//axios.post('https://formspree.io/mbjzzwjy', {
-			//	"name": this.name,
-			//	"contact": this.contact,
-			//	"address": this.address,
-			//});
-		
+		sendmail() {
 			idList = this.list;
 			let toCart = [];
 
@@ -285,9 +279,26 @@ var app = new Vue({
 					quantity: idList.reduce((a, v) => (v === item.id ? a + 1 : a), 0)
 				});
 			});
-		
-			//let inCart = JSON.stringify(toCart, null, '\t');
-		
+			
+			let inCart = JSON.stringify(toCart, null, '\t');
+			
+			//formspree
+			axios.post('https://formspree.io/mbjzzwjy', {
+				"name": this.name,
+				"contact": this.contact,
+				"address": this.address,
+				"orders": inCart
+			});
+			
+			//elformo
+			axios.post('https://www.elformo.com/forms/ce31aadc-a8fb-4433-aadf-1a8ab44f65fa', {
+				"name": this.name,
+				"contact": this.contact,
+				"address": this.address,
+				"orders": inCart
+			});
+			
+			//sendmailhooks
 			axios.post('https://sendmail-hooks.herokuapp.com/mailer/wtc-1/', {
 				"name": this.name,
 				"contact": this.contact,
