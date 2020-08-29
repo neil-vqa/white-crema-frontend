@@ -291,6 +291,7 @@ var app = new Vue({
 			});
 			
 			//elformo
+			axios.defaults.xsrfHeaderName = "Access-Control-Allow-Origin"
 			axios.post('https://www.elformo.com/forms/ce31aadc-a8fb-4433-aadf-1a8ab44f65fa', {
 				"name": this.name,
 				"contact": this.contact,
