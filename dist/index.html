@@ -290,16 +290,6 @@ var app = new Vue({
 				"orders": inCart
 			});
 			
-			//elformo
-			axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
-			axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-			axios.post('https://www.elformo.com/forms/ce31aadc-a8fb-4433-aadf-1a8ab44f65fa', {
-				"name": this.name,
-				"contact": this.contact,
-				"address": this.address,
-				"orders": inCart
-			});
-			
 			//sendmailhooks
 			axios.post('https://sendmail-hooks.herokuapp.com/mailer/wtc-1/', {
 				"name": this.name,
