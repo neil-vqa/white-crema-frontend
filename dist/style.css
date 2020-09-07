@@ -638,6 +638,12 @@ video {
   background-color: rgba(203, 213, 224, var(--bg-opacity));
 }
 
+.bg-red-400{
+  --bg-opacity: 1;
+  background-color: #fc8181;
+  background-color: rgba(252, 129, 129, var(--bg-opacity));
+}
+
 .bg-blue-200{
   --bg-opacity: 1;
   background-color: #bee3f8;
@@ -998,6 +1004,10 @@ video {
   width: 1.5rem;
 }
 
+.w-8{
+  width: 2rem;
+}
+
 .w-10{
   width: 2.5rem;
 }
@@ -1158,7 +1168,7 @@ video {
   border-radius: 9999px;
   transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  transition-duration: 500ms;
+  transition-duration: 300ms;
 }
 
 .cart-remove {
@@ -1174,7 +1184,7 @@ video {
   border-radius: 9999px;
   transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  transition-duration: 500ms;
+  transition-duration: 300ms;
 }
 
 .cart-btn {
@@ -1237,6 +1247,10 @@ video {
 
   .sm\:text-6xl{
     font-size: 4rem;
+  }
+
+  .sm\:mr-4{
+    margin-right: 1rem;
   }
 
   .sm\:mr-5{
