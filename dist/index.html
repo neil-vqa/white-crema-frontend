@@ -307,13 +307,13 @@ var app = new Vue({
 			});
 			
 			//chatbot
-			//axios.post('https://sendchat-hooks.herokuapp.com/chatter/nvqa-1/', {
-			//	"name": this.name,
-			//	"contact": this.contact,
-			//	"address": this.address,
-			//	"total": this.total,
-			//	"orders": toCart
-			//});
+			axios.post('https://sendchat-hooks.herokuapp.com/chatter/nvqa-1/', {
+				"name": this.name,
+				"contact": this.contact,
+				"address": this.address,
+				"total": this.total,
+				"orders": toCart
+			});
 		},
 	},
 	computed: {
