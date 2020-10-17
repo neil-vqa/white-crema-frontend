@@ -1,7 +1,7 @@
 module.exports = {
   purge: {
     enabled: true,
-    content: ['./dist/*.html'],
+    content: ['./dist/*.html','./dist/about/*.html','./dist/contact/*.html'],
   },
   theme: {
     extend: {
