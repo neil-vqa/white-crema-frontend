@@ -208,6 +208,7 @@ var app = new Vue({
 			contact: '',
 			address: '',
 			total: '',
+			paid: 'Unpaid (Assumed as COD)',
 		}
 	},
 	methods: {
@@ -245,7 +246,7 @@ var app = new Vue({
 				"cart": this.checkout,
 				})
 				.then( response => {
-					this.sendmail();
+					//this.sendmail();
 					this.name = '',
 					this.contact = '',
 					this.address = '',
@@ -290,12 +291,12 @@ var app = new Vue({
 			let inCart = JSON.stringify(toCart, null, '\t');
 			
 			//formspree-basic-notif
-			axios.post('https://formspree.io/mbjzzwjy', {
-				"name": this.name,
-				"contact": this.contact,
-				"address": this.address,
-				"orders": inCart
-			});
+			//axios.post('https://formspree.io/mbjzzwjy', {
+			//	"name": this.name,
+			//	"contact": this.contact,
+			//	"address": this.address,
+			//	"orders": inCart
+			//});
 			
 			//sendmailhooks-custom-notif
 			axios.post('https://sendmail-hooks.herokuapp.com/mailer/wtc-1/', {
@@ -315,6 +316,39 @@ var app = new Vue({
 				"orders": toCart
 			});
 		},
+		setLoaded() {
+			console.log("loaded!");
+			window.paypal.Buttons({
+				fundingSource: paypal.FUNDING.PAYPAL,
+				createOrder: (data, actions) => {
+					return actions.order.create({
+						purchase_units: [
+							{
+							description: this.name,
+							amount: {
+								value: this.total,
+							}
+							}
+						]
+					});
+				},
+				onApprove: async (data, actions) => {
+					const order = await actions.order.capture()
+								.then( details => {
+									//console.log(details)
+									alert("paid! please continue sending your order.");
+									this.paid = 'Paid';
+								});
+				},
+				onError: err => {
+					console.log(err);
+				},
+				style: {
+					color: "silver",
+					label: "pay",
+				}
+			}).render(this.$refs.paypal);
+		},
 	},
 	computed: {
 		count(list, val) {
@@ -330,7 +364,13 @@ var app = new Vue({
 		counter() {
 			let counted = this.orders.length
 			return counted
-		}
+		},
+	},
+	mounted: function() {
+		const script = document.createElement("script");
+		script.src = "https://www.paypal.com/sdk/js?currency=PHP&client-id=ATrHqzpZb1t6KjjXkAblipqyRS7Yk4CmE6l0WnTbBi4jCGYkN2gP6pBJv-FlAvOpt4Q2IMqRlEHHrGT-"
+		script.addEventListener("load", this.setLoaded);
+		document.body.appendChild(script);
 	},
 	template: `
 		<div class="relative">
@@ -358,6 +398,9 @@ var app = new Vue({
 							<input v-model="name" name="Name" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Full Name" required>
 							<input v-model="contact" name="Contact" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact" type="number" placeholder="Contact Number" required>
 							<input v-model="address" name="Address" class="shadow appearance-none border rounded w-full py-2 px-3 my-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="address" type="text" placeholder="Delivery Address" required>
+							<p>Payment: [[ paid ]]</p>
+							<p class="text-teal-800">You can pay with Paypal</p>
+							<div ref="paypal" class="mt-5"></div>
 							<div class="flex items-center mt-3">
 								<button type="submit" :disabled="disabler" class="px-4 py-2 bg-blue-700 text-white hover:bg-blue-900 rounded-md focus:outline-none">Place order</button>
 								<h1 class="text-xl ml-2" v-if="sending">Please wait...</h1>
@@ -367,6 +410,8 @@ var app = new Vue({
 					</div>
 				</div>
 			</div>
+			
+			
 			
 			<div class="mt-10">
 				<ProductList @update-cart="updateCart" @update-list="updateList" ref="productList"></ProductList>
