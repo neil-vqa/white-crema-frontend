@@ -254,6 +254,7 @@ var app = new Vue({
 					this.orders = [],
 					this.list = [],
 					this.displays = [],
+					this.paid = 'Unpaid (Assumed as COD)',
 					this.empty();
 					this.disabler = false;
 					this.sending = false;
@@ -317,7 +318,7 @@ var app = new Vue({
 			});
 		},
 		setLoaded() {
-			console.log("loaded!");
+			console.log("paypal here!");
 			window.paypal.Buttons({
 				fundingSource: paypal.FUNDING.PAYPAL,
 				createOrder: (data, actions) => {
@@ -349,6 +350,32 @@ var app = new Vue({
 				}
 			}).render(this.$refs.paypal);
 		},
+		payToMaya() {
+			const paymentObject = {
+				"totalAmount": {
+					"value": this.total,
+					"currency": "PHP",
+				},
+				"redirectUrl": {
+					"success": "https://www.merchantsite.com/success",
+					"failure": "https://www.merchantsite.com/failure",
+					"cancel": "https://www.merchantsite.com/cancel"
+				},
+				"requestReferenceNumber": "1551191039",
+				"metadata": {
+					"pf": {
+						"smi": "SUB034221",
+						"smn": "Maya",
+						"mci": "MANILA",
+						"mpc": "608",
+						"mco": "PHL",
+					}
+				}
+			};
+			PayMayaSDK.init('pk-rpwb5YR6EfnKiMsldZqY4hgpvJjuy8hhxW2bVAAiz2N', true);
+			PayMayaSDK.createSinglePayment(paymentObject);
+			console.log('paymaya success!');
+		},
 	},
 	computed: {
 		count(list, val) {
@@ -367,10 +394,18 @@ var app = new Vue({
 		},
 	},
 	mounted: function() {
+		//paypal
 		const script = document.createElement("script");
 		script.src = "https://www.paypal.com/sdk/js?currency=PHP&client-id=ATrHqzpZb1t6KjjXkAblipqyRS7Yk4CmE6l0WnTbBi4jCGYkN2gP6pBJv-FlAvOpt4Q2IMqRlEHHrGT-"
 		script.addEventListener("load", this.setLoaded);
 		document.body.appendChild(script);
+		
+		//paymaya
+		/**const scriptMaya = document.createElement("script");
+		scriptMaya.src = "https://unpkg.com/paymaya-js-sdk@2.0.0/dist/bundle.js"
+		document.body.appendChild(scriptMaya);
+		console.log('paymaya here!');
+		**/
 	},
 	template: `
 		<div class="relative">
